@@ -430,6 +430,28 @@
       | ISR (Revalidate)         | Fresh every X seconds            | `fetch(..., { next: { revalidate }})`                   |
       | Route Segment Cache      | Next.js caches layouts and pages | Add `export const dynamic = "force-dynamic"` to disable |
 
+14.building output
+   npm run build
+
+    Output shows:
+
+    Route (app)          Size     First Load JS
+    ┌ ○ /                  1.2 kB     100 kB
+    ├ ○ /about             1.0 kB      98 kB
+    ├ ● /blog/[id]         1.5 kB      95 kB
+    + First Load JS shared by all   80 kB
+
+    - The home page HTML size is 1.2 KB.
+    - It loads 100 KB of JS when opened.
+    - The blog page uses Static Site Generation (`●`) with `getStaticProps`.
+    - 80 KB of JS is common to all pages.
+    - Route types:
+      - ○ = Static page (prerendered HTML)
+      - ● = Static Site Generation (SSG with `getStaticProps`)
+      - ▲ = Server Side Rendered (SSR) page
+
+
+
 
 
 
