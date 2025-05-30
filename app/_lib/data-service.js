@@ -46,7 +46,7 @@ export const getCabins = async function () {
 
   // For testing
   // await new Promise((res) => setTimeout(res, 2000));
-  console.log("cabins data",data)
+  // console.log("cabins data",data)
 
   if (error) {
     console.error(error);
@@ -133,6 +133,9 @@ export async function getBookedDatesByCabinId(cabinId) {
 
 export async function getSettings() {
   const { data, error } = await supabase.from("settings").select("*").single();
+
+    // For testing
+  // await new Promise((res) => setTimeout(res, 5000));
 
   if (error) {
     console.error(error);

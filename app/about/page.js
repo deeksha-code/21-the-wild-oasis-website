@@ -47,6 +47,7 @@ export default async function Page() {
           alt="Family sitting around a fire pit in front of cabin"
           placeholder="blur"
           quality={80}
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
       </div>
 
@@ -56,6 +57,7 @@ export default async function Page() {
           fill
           className="object-cover"
           alt="Family that manages The Wild Oasis"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
       </div>
 

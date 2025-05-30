@@ -13,6 +13,7 @@ function CabinCard({ cabin }) {
           fill
           alt={`Cabin ${name}`}
           className="object-cover border-r border-primary-800"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
       </div>
 

@@ -12,6 +12,7 @@ export default function Page() {
         quality={80}
         className="object-cover object-top"
         alt="Mountains and forests with two cabins"
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
       />
 
       <div className="relative z-10 text-center">

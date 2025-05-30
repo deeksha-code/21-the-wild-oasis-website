@@ -450,6 +450,64 @@
       - ● = Static Site Generation (SSG with `getStaticProps`)
       - ▲ = Server Side Rendered (SSR) page
 
+15. Notes on Importing vs. Rendering in Next.js 13+ (App Router)
+  -Component Types
+      SC = Server Component
+      CC = Client Component (must include `"use client"` at the top)
+  -component instance can act as both sc and cc(if it is used in client component)
+  -IMPORTING Rules
+    -Server Component can import:
+          -Server Components
+          -Client Components
+
+    -Client Component can import:
+          -Only Client Components
+          -Cannot import Server Components
+
+  -RENDERING Rules
+   -Server Components can render:
+          -Server Components
+          -Client Components
+
+   -Client Components can render:
+          -Other Client Components
+          -Server Components only as props(e.g., `children`)
+
+  -Client-Server Boundary
+    - Starts when a Server Component imports a Client Component.
+    - Inside this boundary, everything must be treated as **client-side**.
+    - You **can’t go back** to importing server logic once inside a client component.
+
+
+
+16.Important Note:reacts hooks like usestate can be used only in client component
+17.vs code shortcut to get rid of unused imports
+   shift+alt+O
+
+18.For sharing data betw
+
+19.Use URL for Data Flow in Next.js
+  -Server-Side Rendering (SSR)
+  The server uses URL data to fetch and render content before sending it to the browser.
+
+  -Deep Linking
+  URLs like /products?category=books can be shared or bookmarked.
+
+  -Persistent State
+  Data in the URL stays the same even after page refresh or navigation.
+
+  -No Need for Global State
+  You can control the page content just using the URL (no extra state management needed).
+
+  -Good for Filters, Search, Pagination
+  Makes it easy to build features like search bars, category filters, and pagination.
+
+  -Improves SEO
+  Search engines can index content based on URL parameters or routes.
+
+
+
+
 
 
 
