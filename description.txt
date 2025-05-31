@@ -532,7 +532,11 @@
 
 25.In server components we can use form(Form action) for submitting,beacuse we cannot use onClick handler 
 
-
+26.
+-git push -u origin main
+ -u means set upstream.
+ -It links your local branch (main) to the remote branch (origin/main).
+ -After this, you can just use git push or git pull without typing the branch name every time.
 
 
 
