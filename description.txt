@@ -505,6 +505,32 @@
   -Improves SEO
   Search engines can index content based on URL parameters or routes.
 
+20.Important
+   -go through the examples of filter:app(page.js).Filter.js,CabinList.js
+
+21.creating an API endpoint with Route handlers
+    -refer api folder
+    -url:http://localhost:3000/api/cabins/51
+
+22.Learn about server client boundary in nextjs
+   server component
+   -example: {session.user?<ReservationForm cabin={cabin} user={session.user}/>}
+   -here we pass data(component instance) from server and render in
+   -client omponent:
+   "use client";
+    import { useReservation } from "./ReservationContext";
+    function ReservationForm({cabin,user}) {}
+
+23.difference between authentication and authorisation
+
+24.Middleware
+  -Middleware sits between incoming request and before the response is completed
+  -It runs before the evry route in a project
+  -helps in authentication and authorisation
+  -In nextJS there is always convention for naming files,for middleware middleware.js and it should be placed in the roott folder,not inside app folder
+  -middleware is exceuted for every routes  
+
+25.In server components we can use form(Form action) for submitting,beacuse we cannot use onClick handler 
 
 
 
