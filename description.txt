@@ -538,7 +538,151 @@
  -It links your local branch (main) to the remote branch (origin/main).
  -After this, you can just use git push or git pull without typing the branch name every time.
 
+27.server action
+  -after server action revalidate the cache for reflecting the updated changes in ui
+  -useTransition Hook (refer delete transition)
+  -useOptimistic hook
 
+  1. Server Actions
+    -Server actions allow you to run server-side code (e.g., update DB, delete item) directly from the client by using the `action` prop on `<form>`.
+    -They are invoked via `<form action={serverFunction}>` or from the client via `useFormState`/`useFormStatus`.
+    -Example:
+      // app/_lib/actions.js
+      'use server';
+
+      import { revalidatePath } from 'next/cache';
+      import { db } from './db'; // adjust path based on your actual db import
+
+      export async function updateGuest(formData) {
+        const nationalID = formData.get('nationalID');
+        const guestId = formData.get('guestId'); // assuming you pass guestId in the form
+
+        if (!guestId || !nationalID) return;
+
+        await db.guest.update({
+          where: { id: guestId },
+          data: { nationalID },
+        });
+
+        // Revalidate the relevant path to reflect updated data
+        revalidatePath('/dashboard'); // or whichever route needs updating
+      }
+
+
+  2.Revalidate Cache After Server Action
+    - Next.js caches data at the route level (via `fetch`, `getServerSideProps`, etc.).
+    -After a server action updates data, **you must manually revalidate** the cache to reflect changes in the UI.
+    -example
+      // app/_lib/actions.js
+      'use server';
+
+      import { revalidatePath } from 'next/cache';
+
+      export async function updateGuest(formData) {
+        const nationalID = formData.get('nationalID');
+        const guestId = formData.get('guestId'); // Ensure this is included in your form
+
+        // Perform your update logic here (example using Prisma or any DB logic)
+        await db.guest.update({
+          where: { id: guestId },
+          data: { nationalID },
+        });
+
+        // Revalidate the path so UI reflects updated data
+        revalidatePath('/dashboard'); // Change this to the route that needs refreshing
+      }
+
+
+  3. useTransition Hook
+    - Helps show a =pending UI state= (e.g., spinner) when performing non-blocking actions like deleting or updating.
+    -Ideal for cases where you don't want to block UI immediately.
+
+    -Example:
+
+      'use client';
+
+      import { useTransition } from 'react';
+      import { deleteGuest } from '../_lib/actions'; // adjust the path to your actual action
+
+      export default function DeleteButton({ id }) {
+        const [isPending, startTransition] = useTransition();
+
+        function handleDelete() {
+          startTransition(async () => {
+            await deleteGuest(id);
+          });
+        }
+
+        return (
+          <button onClick={handleDelete} disabled={isPending}>
+            {isPending ? 'Deleting...' : 'Delete'}
+          </button>
+        );
+      }
+
+
+    - `isPending` can be used to disable buttons or show loading indicators.
+
+
+
+  4.useOptimistic Hook
+    - Used for optimistically updating UI before the server action completes.
+    - Makes UI feel faster by assuming the operation will succeed.
+
+    -Example:
+
+      'use client';
+
+      import { useState, useTransition, useOptimistic } from 'react';
+      import { createGuest } from '../_lib/actions'; // Adjust path as needed
+
+      export default function GuestList({ guests }) {
+        const [isPending, startTransition] = useTransition();
+        const [optimisticGuests, addOptimisticGuest] = useOptimistic(
+          guests,
+          (state, newGuest) => [...state, newGuest]
+        );
+
+        function handleAddGuest(newGuest) {
+          addOptimisticGuest(newGuest); // Optimistically update UI
+
+          startTransition(() => {
+            createGuest(newGuest); // Server call
+          });
+        }
+
+        return (
+          <div>
+            <ul>
+              {optimisticGuests.map((guest, idx) => (
+                <li key={idx}>{guest.name}</li>
+              ))}
+            </ul>
+
+            <button
+              onClick={() =>
+                handleAddGuest({ name: 'New Guest ' + (optimisticGuests.length + 1) })
+              }
+              disabled={isPending}
+            >
+              {isPending ? 'Adding...' : 'Add Guest'}
+            </button>
+          </div>
+        );
+      }
+
+
+  -Summary Table
+
+    | Feature          | Purpose                             | Used In                    |
+    | ---------------- | ----------------------------------- | -------------------------- |
+    | `Server Actions` | Run logic on server via form/button | DB updates, API operations |
+    | `revalidatePath` | Re-fetch cached route data          | After mutation             |
+    | `useTransition`  | Show non-blocking pending state     | Delete/edit actions        |
+    | `useOptimistic`  | Optimistically update UI            | Adding/removing list items |
+
+
+28.Error Boundary
 
 
 
